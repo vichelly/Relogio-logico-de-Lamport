@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>Simulação de Relógios Lógicos</h1>
+    <button onclick="getTime()">Obter Tempo</button>
+    <button onclick="incrementClock()">Incrementar Relógio</button>
+    <button onclick="sendMessage()">Enviar Mensagem</button>
+    <pre id="output"></pre>
+
+    <script>
+        const apiUrl = 'http://localhost:8080/relogio';
+
+        function log(message) {
+            document.getElementById('output').textContent += message + '\n';
+        }
+
+        async function getTime() {
+            const response = await fetch(`${apiUrl}/time`);
+            const time = await response.text();
+            log(`Tempo Atual: ${time}`);
+        }
+
+        async function incrementClock() {
+            const response = await fetch(`${apiUrl}/increment`, { method: 'POST' });
+            const newTime = await response.text();
+            log(`Relógio Incrementado: ${newTime}`);
+        }
+
+        async function sendMessage() {
+            const senderClock = Math.floor(Math.random() * 10) + 1;
+            const response = await fetch(`${apiUrl}/message?senderClock=${senderClock}`, { method: 'POST' });
+            const updatedTime = await response.text();
+            log(`Mensagem Enviada (Clock do Remetente: ${senderClock}) | Clock Atualizado: ${updatedTime}`);
+        }
+    </script>
+</body>
+</html>
