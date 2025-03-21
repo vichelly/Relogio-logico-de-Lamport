@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulação de Relógios Lógicos</title>
 </head>
 <body>
     <h1>Simulação de Relógios Lógicos</h1>
@@ -12,29 +13,44 @@
     <pre id="output"></pre>
 
     <script>
-        const apiUrl = 'http://localhost:8080/relogio';
+        const apiUrl = 'http://localhost:8080/clock';
 
         function log(message) {
             document.getElementById('output').textContent += message + '\n';
         }
 
         async function getTime() {
-            const response = await fetch(`${apiUrl}/time`);
-            const time = await response.text();
-            log(`Tempo Atual: ${time}`);
+            try {
+                const response = await fetch(`${apiUrl}/time`);
+                if (!response.ok) throw new Error('Erro ao obter o tempo');
+                const time = await response.text();
+                log(`Tempo Atual: ${time}`);
+            } catch (error) {
+                log(error.message);
+            }
         }
 
         async function incrementClock() {
-            const response = await fetch(`${apiUrl}/increment`, { method: 'POST' });
-            const newTime = await response.text();
-            log(`Relógio Incrementado: ${newTime}`);
+            try {
+                const response = await fetch(`${apiUrl}/increment`, { method: 'POST' });
+                if (!response.ok) throw new Error('Erro ao incrementar o relógio');
+                const newTime = await response.text();
+                log(`Relógio Incrementado: ${newTime}`);
+            } catch (error) {
+                log(error.message);
+            }
         }
 
         async function sendMessage() {
-            const senderClock = Math.floor(Math.random() * 10) + 1;
-            const response = await fetch(`${apiUrl}/message?senderClock=${senderClock}`, { method: 'POST' });
-            const updatedTime = await response.text();
-            log(`Mensagem Enviada (Clock do Remetente: ${senderClock}) | Clock Atualizado: ${updatedTime}`);
+            try {
+                const senderClock = Math.floor(Math.random() * 10) + 1;
+                const response = await fetch(`${apiUrl}/message?senderRelogio=${senderClock}`, { method: 'POST' });
+                if (!response.ok) throw new Error('Erro ao enviar a mensagem');
+                const updatedTime = await response.text();
+                log(`Mensagem Enviada (Clock do Remetente: ${senderClock}) | Clock Atualizado: ${updatedTime}`);
+            } catch (error) {
+                log(error.message);
+            }
         }
     </script>
 </body>
